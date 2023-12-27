@@ -18,9 +18,13 @@ spec:
       containers:
         - name: synergychat-api
           image: lanecwagner/synergychat-api:latest
-          env:
-            - name: API_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: synergychat-api-configmap
-                  key: API_PORT
+          volumeMounts:
+            - name: synergychat-api-volume
+              mountPath: /persist
+          envFrom:
+            - configMapRef:
+                name: synergychat-api-configmap
+      volumes:
+        - name: synergychat-api-volume
+          persistentVolumeClaim:
+            claimName: synergychat-api-pvc
